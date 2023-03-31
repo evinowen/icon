@@ -1,0 +1,5 @@
+SOUND_WEAPON       =   $01
+SOUND_INJURY       =   $02
+SOUND_COIN         =   $03
+SOUND_STAIRS_UP    =   $04
+SOUND_STAIRS_DOWN  =   $05

@@ -1,0 +1,5 @@
+bin/
+backup/
+src/.macros.asm
+src/.constants.asm
+.env
