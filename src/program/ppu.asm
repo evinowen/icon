@@ -6,11 +6,12 @@
 ;; to update.
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-PPUNMIEnable:
+PPUNMIEnableAfterVBlankWait:
   PPUScroll #$00, #$00
 
   VBlankWait
 
+PPUNMIEnable:
   LDA ppu_ctrl
   ORA #%10000000
   STA ppu_ctrl

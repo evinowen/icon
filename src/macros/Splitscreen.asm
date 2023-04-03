@@ -1,17 +1,17 @@
 .macro Splitscreen AddressX, AddressY
   PPUAddress #$00
 
-  PPUScroll #$00, #$00
+  PPUScroll #$10, #$10
 
   PPUStatus
 
   ;;
   ;; Write nametable bits to t.
   ;;
-  LDA #$00
-  ; LDA scroll_nt
-  ; ASL A
-  ; ASL A
+  ; LDA #$00
+  LDA scroll_nt
+  ASL A
+  ASL A
   STA $2006
 
   ;;
@@ -45,13 +45,13 @@
   LSR A
   ORA zero_a
 
-  ;;
-  ;; Wait the configured SCROLL_SPLIT_WAIT loops
-  ;;
-  LDY #SCROLL_SPLIT_WAIT
-  :
-    DEY
-    BNE :-
+  ; ;;
+  ; ;; Wait the configured SCROLL_SPLIT_WAIT loops
+  ; ;;
+  ; LDY #SCROLL_SPLIT_WAIT
+  ; :
+  ;   DEY
+  ;   BNE :-
 
   ;;
   ;; Final Write

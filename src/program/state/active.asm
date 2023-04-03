@@ -2,7 +2,7 @@ ENGINE_STATE_ACTIVE_PREP_P0:
   PPUClear
 
   LDX #$02
-  JSR MAPSetCHRBank
+  JSR MAPSetCHRBankActive
   JSR ScreenLoader
 
     ; ; Set bg_status to Update and Split, but clear remaining flags
@@ -31,7 +31,7 @@ ENGINE_STATE_ACTIVE_PREP_P0:
   RTI
 
 ENGINE_STATE_ACTIVE_PREP_P1:
-  LDA #$F2
+  LDA #PPUBACKGROUNDROOM_ACTIVE
   STA bg_current
 
   LDA #%10000000
@@ -41,12 +41,12 @@ ENGINE_STATE_ACTIVE_PREP_P1:
   ORA #%00001000
   STA ppu_mask
 
-  LDA #$00
+  LDA #$EF
   STA scroll_fy
 
   JSR PPUNMIEnable
 
-  LDA #$C0
+  LDA #$FF
   STA tick
 
   RTI
@@ -55,7 +55,14 @@ ENGINE_STATE_ACTIVE:
   PrepareEngineState #$00, ENGINE_STATE_ACTIVE_PREP_P0
   PrepareEngineState #$01, ENGINE_STATE_ACTIVE_PREP_P1
 
-  INC scroll_fy
+  LDA scroll_fy
+  SEC
+  SBC #$01
+  CMP #$20
+  BNE :+
+    LDA #$EF
+  :
+  STA scroll_fy
 
   LDX tick
   CPX #$00

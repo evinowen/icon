@@ -1,5 +1,5 @@
 .macro InitializeProgram
-  ;; Set Interupt Flag
+  ;; Set Interupt Disable Flag
   SEI
 
   ;; Clear Decimal Flag
@@ -18,12 +18,9 @@
   ;; Increment X, now x00
   INX
 
-  ;; Set NMI to x00
   STX $2000    ; disable NMI
 
-  ;; Set NMI to x00
   STX $2001    ; disable rendering
 
-  ;; Set NMI to x00
   STX $4010    ; disable DMC IRQs
 .endmacro

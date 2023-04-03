@@ -1,4 +1,4 @@
 .segment "VECTORS"
 .word NMI
 .word RESET
-.word 0
+.word IRQ

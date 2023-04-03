@@ -89,7 +89,6 @@ game_prep:     .res 1
 layout:        .res 1
 pause:         .res 1
 weapon:        .res 1
-weapon2:       .res 1
 zero:          .res 1
 
 
@@ -144,20 +143,14 @@ controller_bp: .res 1
 action:        .res 1
 
 ;;
-;; Player Wealth Credit
+;; Player Score Credit
 ;; Stores the current credit owed to the player by the system
 ;;
-player_wealth_credit: .res 1
+player_score_credit: .res 1
 
 ;;
-;; Player Wealth Debt
-;; Stores the current debt owed by the player to the system
-;;
-player_wealth_debt:   .res 1
-
-;;
-;; Player Wealth A/B/C/D
-;; Stores the player's wealth, in a format that can be quickly
+;; Player Score A/B/C/D
+;; Stores the player score, in a format that can be quickly
 ;; converted to decimal values.
 ;;
 ;; Every four bits represent a single digit for 0-9 values.
@@ -166,10 +159,10 @@ player_wealth_debt:   .res 1
 ;; 8---7---6---5---4---3---2---1---
 ;;
 
-player_wealth_a: .res 1
-player_wealth_b: .res 1
-player_wealth_c: .res 1
-player_wealth_d: .res 1
+player_score_a: .res 1
+player_score_b: .res 1
+player_score_c: .res 1
+player_score_d: .res 1
 
 
 

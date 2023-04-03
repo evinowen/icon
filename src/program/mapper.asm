@@ -1,63 +1,42 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Mapper Mirror Horizontal
+;; Mapper ;; MMC3
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-MAPMirrorHorizontal:
-    LDA #%10000000
-    STA $8000
 
-    LDA #%00000011
+MAPSetCHRBankTitle:
+  LDA #%00000010
+  STA $8000
 
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
+  LDA #$04
+  STA $8001
+
+  LDA #%00000011
+  STA $8000
+
+  LDA #$05
+  STA $8001
 
   RTS
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Mapper Mirror Vertical
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-MAPMirrorVertical:
-    LDA #%10000000
-    STA $8000
+MAPSetCHRBankActive:
+  LDA #%00000010
+  STA $8000
 
-    LDA #%00000010
+  LDA #$0C
+  STA $8001
 
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
-    LSR A
-    STA $8000
+  LDA #%00000011
+  STA $8000
+
+  LDA #$0D
+  STA $8001
 
   RTS
 
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Mapper Set CHR Bank
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-MAPSetCHRBank:
-    LDA #%10000000
-    STA $A000
-
-    TXA
-
-    STA $A000
-    LSR A
-    STA $A000
-    LSR A
-    STA $A000
-    LSR A
-    STA $A000
-    LSR A
-    STA $A000
+MAPScanlineTrigger:
+  STA $E000
+  STA $C000
+  STA $C001
+  STA $E001
+  CLI
 
   RTS

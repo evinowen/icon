@@ -21,10 +21,10 @@
 .byte "NES", $1A
 
 ;; BYTE 4: Set 16KB PRG ROM Banks
-.byte $02
+.byte $04
 
 ;; BYTE 5: Set 8KB CHR ROM Banks
-.byte $02
+.byte $08
 
 ;; BYTE 6: https://www.nesdev.org/wiki/INES#Flags_6
 ;;   76543210
@@ -35,7 +35,7 @@
 ;;   |||||+--- 1: 512-byte trainer at $7000-$71FF (stored before PRG data)
 ;;   ||||+---- 1: Ignore mirroring control or above mirroring bit; instead provide four-screen VRAM
 ;;   ++++----- Lower nybble of mapper number
-.byte %00010000
+.byte %01000000
 
 ;; BYTE 7: https://www.nesdev.org/wiki/INES#Flags_7
 ;;   76543210

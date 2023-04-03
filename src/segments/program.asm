@@ -55,6 +55,12 @@ NMI:
 .include "program/nmi.asm"
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; IRQ ;; INTERUPT REQUEST
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+IRQ:
+.include "program/irq.asm"
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; INCLUDES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 .include "program/state/title.asm"
@@ -72,7 +78,5 @@ NMI:
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Load Layout Controls
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-.include "program/layout/buffer.asm"
 .include "program/layout/load.asm"
 .include "program/layout/screen.asm"
-.include "program/layout/scroll.asm"

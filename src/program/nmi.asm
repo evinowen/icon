@@ -1,3 +1,13 @@
+.proc ExecuteSplitscreen
+  PPUScroll #$00, #$00
+  LDA scroll_fy
+  CMP #$00
+  BEQ End
+    LDA #$1F
+    JSR MAPScanlineTrigger
+  End:
+.endproc
+
 ;; Load Color Updates
 ; JSR PPUColor
 
@@ -6,20 +16,8 @@ PPUBackground
 
 PPUSpriteDMA
 
-.proc ExecuteSplitscreen
-;; Load Screen with Scroll
-LDA scroll_fy
-CMP #$00
-BEQ End
-  Splitscreen scroll_fx, scroll_fy
-End:
-.endproc
-
 ;; Update $2000 and $2001
 PPUSet
-
-;; Setup the next Scroll
-PPUBuffer
 
 ;; Track the current frame from 0 to F
 IncrementVariableToLimit frame, #$10
