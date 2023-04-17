@@ -1,0 +1,54 @@
+name: build
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  build_on_ubuntu:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Determine Target Package Version
+      run: |
+        PACKAGE_VERSION=${GITHUB_REF#refs/*/}
+        echo "PACKAGE_VERSION=$PACKAGE_VERSION"
+        echo "PACKAGE_VERSION=$PACKAGE_VERSION" >> $GITHUB_ENV
+
+    - name: Install CC65
+      run: sudo apt-get install cc65
+
+    - name: Checkout Repository
+      uses: actions/checkout@master
+
+    - name: Enable Scripts
+      run: |
+        chmod +x ./util/gen.fceux.nl.sh
+        chmod +x ./util/gen.includes.sh
+
+    - name: Make ROM
+      run: make
+
+    - name: Upload Setup Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: Icon.${{ env.PACKAGE_VERSION }}.rc-${{ github.sha }}.nes
+        path: bin/icon.nes
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@latest
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        tag_name: ${{ env.PACKAGE_VERSION }}
+        release_name: ${{ env.PACKAGE_VERSION }}
+
+    - name: Upload Artifacts
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: bin/icon.nes
+        asset_name: Icon.${{ env.PACKAGE_VERSION }}.nes
+        asset_content_type: application/nes
