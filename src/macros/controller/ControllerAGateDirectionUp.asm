@@ -1,0 +1,13 @@
+CONTROLLER_DIRECTION_UP = %00001000
+
+.macro ControllerAGateDirectionUp ExitBranch
+  LDA controller_a
+  AND #CONTROLLER_DIRECTION_UP
+  CMP #CONTROLLER_DIRECTION_UP
+  BNE ExitBranch
+
+  LDA controller_ap
+  AND #CONTROLLER_DIRECTION_UP
+  CMP #CONTROLLER_DIRECTION_UP
+  BNE ExitBranch
+.endmacro

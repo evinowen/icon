@@ -22,9 +22,7 @@ ENGINE_STATE_TITLE_PREP_P0:
   LDX #$00
   JSR MAPSetCHRBankTitle
 
-  LDA ppu_mask
-  AND #%11100111
-  STA ppu_mask
+  PPUMaskHideSprites
 
   LDA #$00
   STA color_index
@@ -33,7 +31,7 @@ ENGINE_STATE_TITLE_PREP_P0:
   STA color_status
 
   LDA #$00
-  STA scroll_fy
+  STA scroll
 
   JSR PPUNMIEnable
 
@@ -46,19 +44,43 @@ ENGINE_STATE_TITLE_PREP_P1:
   LDA #%10000000
   STA bg_status
 
-  LDA ppu_mask
-  ORA #%00011000
-  STA ppu_mask
-
-  LDA ppu_mask
-  ORA #%00011000
-  STA ppu_mask
+  PPUMaskShowBackground
 
   JSR PPUNMIEnable
 
+  LDA #$01
+  STA tick
+
   RTI
 
+
 ENGINE_STATE_TITLE_ACTIVE:
+  .proc EngineStateTitle_BlinkStart
+  DEC tick
+  LDA tick
+  CMP #$00
+  BNE End
+    LDA #$30
+    STA tick
+
+    LDA game_state
+    CMP #$00
+    BEQ TurnOn
+
+    TurnOff:
+      LDA #$00
+      STA game_state
+      JSR MAPSetCHRBankTitle
+    JMP End
+
+    TurnOn:
+      LDA #$01
+      STA game_state
+      JSR MAPSetCHRBankTitleAlt
+
+  End:
+  .endproc
+
   .proc EngineStateTitle_Randomize
     ;;
     ;; Randomize -- While waiting at the title screen, seed the random
@@ -84,27 +106,11 @@ ENGINE_STATE_TITLE_ACTIVE:
   .endproc
 
   .proc EngineStateTitle_PressStart
-    ;;  Load input from Controller A
-    JSR InputControllerA
-
-    ;; PRESS START -- If not Pressed, skip to end so the player
-    ;; remains on the title screen.
-    LDA controller_a
-    AND #%00010000
-    CMP #%00010000
-    BNE :+
-
-    LDA controller_ap
-    AND #%00010000
-    BNE :+
+    ControllerAGateStart :+
       ;; Start Pressed - change game state to GAME_NEXT
       LDA #GAME_SPLASH
       STA game
     :
-
-    ;; Track Controller A state
-    LDA controller_a
-    STA controller_ap
   .endproc
 
   RTI

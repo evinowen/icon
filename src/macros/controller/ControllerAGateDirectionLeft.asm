@@ -1,0 +1,13 @@
+CONTROLLER_DIRECTION_LEFT = %00000010
+
+.macro ControllerAGateDirectionLeft ExitBranch
+  LDA controller_a
+  AND #CONTROLLER_DIRECTION_LEFT
+  CMP #CONTROLLER_DIRECTION_LEFT
+  BNE ExitBranch
+
+  LDA controller_ap
+  AND #CONTROLLER_DIRECTION_LEFT
+  CMP #CONTROLLER_DIRECTION_LEFT
+  BNE ExitBranch
+.endmacro

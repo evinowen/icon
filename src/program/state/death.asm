@@ -5,9 +5,8 @@ ENGINE_STATE_DEATH_PREP_P0:
   JSR MAPSetCHRBankTitle
   JSR ScreenLoader
 
-  LDA ppu_mask
-  AND #%11100111
-  STA ppu_mask
+  PPUMaskHideSprites
+  PPUMaskHideBackground
 
   LDA #$00
   STA color_index
@@ -25,12 +24,10 @@ ENGINE_STATE_DEATH_PREP_P1:
   LDA #%10000000
   STA bg_status
 
-  LDA ppu_mask
-  ORA #%00001000
-  STA ppu_mask
+  PPUMaskShowBackground
 
   LDA #$00
-  STA scroll_fy
+  STA scroll
 
   JSR PPUNMIEnable
 

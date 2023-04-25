@@ -1,4 +1,5 @@
 ;; SPRITE
+SPRITE_ARRAY        = $0200
 ;; These are bytes as defined by the NES system
 SPRITE_SIZE         = $04
 SPRITE_OFFSET_Y_POS = $00

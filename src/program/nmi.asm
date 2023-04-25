@@ -1,6 +1,8 @@
+PPUSpriteDMA
+
 .proc ExecuteSplitscreen
   PPUScroll #$00, #$00
-  LDA scroll_fy
+  LDA scroll
   CMP #$00
   BEQ End
     LDA #$1F
@@ -14,8 +16,6 @@
 ;; Load Background Updates
 PPUBackground
 
-PPUSpriteDMA
-
 ;; Update $2000 and $2001
 PPUSet
 
@@ -28,6 +28,18 @@ TrackVariableStoreY game, game_last, :+
   LDA #$00
   STA game_prep
 :
+
+;; Track Controller A state
+LDA controller_a
+STA controller_ap
+;;  Load input from Controller A
+JSR InputControllerA
+
+;; Track Controller B state
+LDA controller_b
+STA controller_bp
+;;  Load input from Controller A
+JSR InputControllerB
 
 ;; Leverage retrieved game state (Y) to jump to engine state routine
 JumpAddressOffsetY ENGINE_STATES

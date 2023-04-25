@@ -8,10 +8,10 @@
   ;;
   ;; Write nametable bits to t.
   ;;
-  ; LDA #$00
-  LDA scroll_nt
-  ASL A
-  ASL A
+  LDA #$00
+  ; LDA scroll_nt
+  ; ASL A
+  ; ASL A
   STA $2006
 
   ;;
