@@ -70,6 +70,13 @@ game_prep:     .res 1
 game_pause:    .res 1
 game_state:    .res 1
 
+game_weapon_heat: .res 1
+game_weapon_cooldown: .res 1
+
+game_a:        .res 1
+game_b:        .res 1
+game_c:        .res 1
+
 
 ;;
 ;; Scroll

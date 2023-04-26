@@ -9,6 +9,15 @@
   STA scroll
 .endmacro
 
+.macro EngineStateActive_MoveBullet Index
+.local EndMacro
+  SpriteGetYPosition Index
+  CMP #$F0
+  BCS EndMacro
+    SpriteDecrementYPosition Index, #$02
+EndMacro:
+.endmacro
+
 ENGINE_STATE_ACTIVE_PREP_P0:
   PPUClear
 
@@ -46,6 +55,12 @@ ENGINE_STATE_ACTIVE_PREP_P1:
   LDA #$FF
   STA tick
 
+  LDA #$00
+  STA game_weapon_heat
+
+  LDA #$10
+  STA game_weapon_cooldown
+
   RTI
 
 ENGINE_STATE_ACTIVE_PREP_P2:
@@ -57,10 +72,10 @@ ENGINE_STATE_ACTIVE_PREP_P2:
   EntitySetYPosition #IDX_CREATURE_PLAYER, #$C0
   EntitySetXPosition #IDX_CREATURE_PLAYER, #$78
 
-  EntitySetFront #$05
-  EntityTile #$05, #$20
-  EntityPalette #$05, #$00
-  SpriteFollow #$05, #IDX_CREATURE_PLAYER, #$04, #$0F
+  SpriteSetFront #IDX_CREATURE_PLAYER_FIRE
+  SpriteTile #IDX_CREATURE_PLAYER_FIRE, #$20
+  SpritePalette #IDX_CREATURE_PLAYER_FIRE, #$00
+  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0F
   RTI
 
 ENGINE_STATE_ACTIVE:
@@ -71,24 +86,50 @@ ENGINE_STATE_ACTIVE:
   EntityTile #IDX_CREATURE_PLAYER, #$00
 
   .scope
-    ControllerAGateDirectionUp UpEnd
-      JSR EngineStateActive_PressUp
-    UpEnd:
-
-    ControllerAGateDirectionDown DownEnd
-      JSR EngineStateActive_PressDown
-    DownEnd:
-
-    ControllerAGateDirectionLeft LeftEnd
-      JSR EngineStateActive_PressLeft
-    LeftEnd:
-
-    ControllerAGateDirectionRight RightEnd
-      JSR EngineStateActive_PressRight
-    RightEnd:
+  LDA game_weapon_heat
+  CMP #$00
+  BEQ :+
+    DEC game_weapon_heat
+  :
   .endscope
 
-  SpriteFollow #$05, #IDX_CREATURE_PLAYER, #$04, #$0A
+  .scope
+    ControllerAGateDirectionUp DirectionUpEnd
+      JSR EngineStateActive_PressUp
+    DirectionUpEnd:
+
+    ControllerAGateDirectionDown DirectionDownEnd
+      JSR EngineStateActive_PressDown
+    DirectionDownEnd:
+
+    ControllerAGateDirectionLeft DirectionLeftEnd
+      JSR EngineStateActive_PressLeft
+    DirectionLeftEnd:
+
+    ControllerAGateDirectionRight DirectionRightEnd
+      JSR EngineStateActive_PressRight
+    DirectionRightEnd:
+
+    ControllerAGateButtonA ButtonAEnd
+      JSR EngineStateActive_PressFire
+      JMP ButtonBEnd
+    ButtonAEnd:
+
+    ControllerAGateButtonB ButtonBEnd
+      JSR EngineStateActive_PressFire
+    ButtonBEnd:
+  .endscope
+
+  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0A
+
+  .scope
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_A
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_B
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_C
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_D
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_E
+    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_F
+  .endscope
 
   EngineStateActive_Scroll
 
@@ -125,5 +166,34 @@ ENGINE_STATE_ACTIVE:
   .proc EngineStateActive_PressRight
     EntityIncrementXPosition #IDX_CREATURE_PLAYER, #$02, #$EF
     EntityTile #IDX_CREATURE_PLAYER, #$04
+    RTS
+  .endproc
+
+  .proc EngineStateActive_PressFire
+    LDA game_weapon_heat
+    CMP #$00
+    BEQ WeaponCold
+      RTS
+    WeaponCold:
+
+    LDX #$00
+
+    LDA #IDX_CREATURE_BULLET_A
+    STA game_a
+
+    LoopXLabel:
+      SpriteGetYPosition game_a
+      CMP #$F0
+      BCC PositionCheck
+        SpriteFollow game_a, #IDX_CREATURE_PLAYER
+        SpriteTile game_a, #$20
+        LDA game_weapon_cooldown
+        STA game_weapon_heat
+        RTS
+      PositionCheck:
+
+      INC game_a
+      LoopX #$06, LoopXLabel
+
     RTS
   .endproc
