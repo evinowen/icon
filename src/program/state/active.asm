@@ -18,6 +18,122 @@
 EndMacro:
 .endmacro
 
+.macro EngineStateActive_CollideBullet Index
+.local Loop
+  LDA #IDX_CREATURE_ENEMY_A
+  STA game_b
+
+  SpriteGetYPosition Index
+  CLC
+  ADC #$04
+  STA game_c
+
+  SpriteGetXPosition Index
+  CLC
+  ADC #$04
+  STA game_d
+
+  JSR EngineStateActive_CollideBulletCheck
+  ; Loop:
+  ;   JSR EngineStateActive_CollideBulletCheck
+  ;   LoopVariable game_b, #IDX_CREATURE_ENEMY_END, Loop, #IDX_CREATURE_ENEMY_INC
+
+.endmacro
+
+.proc EngineStateActive_CollideBulletCheck
+  SpriteGetYPosition game_b
+  CMP game_c
+  BCS NoHit
+
+  SpriteGetYPosition game_b
+  CLC
+  ADC #$10
+  CMP game_c
+  BCC NoHit
+
+  SpriteGetXPosition game_b
+  CMP game_d
+  BCS NoHit
+
+  CLC
+  ADC #$10
+  CMP game_d
+  BCC NoHit
+
+  EntityHide game_b
+
+  LDA player_score_credit
+  CLC
+  ADC #$FF
+  STA player_score_credit
+
+NoHit:
+  RTS
+.endproc
+
+.proc EngineStateActive_PressUp
+  EntityDecrementYPosition #IDX_CREATURE_PLAYER, #$02, #$20
+  RTS
+.endproc
+
+.proc EngineStateActive_PressDown
+  EntityIncrementYPosition #IDX_CREATURE_PLAYER, #$02, #$E0
+  RTS
+.endproc
+
+.proc EngineStateActive_PressLeft
+  EntityDecrementXPosition #IDX_CREATURE_PLAYER, #$02, #$00
+  EntityTile #IDX_CREATURE_PLAYER, #$02
+  RTS
+.endproc
+
+.proc EngineStateActive_PressRight
+  EntityIncrementXPosition #IDX_CREATURE_PLAYER, #$02, #$EF
+  EntityTile #IDX_CREATURE_PLAYER, #$04
+  RTS
+.endproc
+
+.proc EngineStateActive_UpdateBullets
+  LDA #IDX_CREATURE_BULLET_A
+  STA game_a
+
+  Loop:
+    EngineStateActive_MoveBullet game_a
+    EngineStateActive_CollideBullet game_a
+
+    LoopVariable game_a, #IDX_CREATURE_BULLET_END, Loop
+
+  RTS
+.endproc
+
+.proc EngineStateActive_PressFire
+  LDA game_weapon_heat
+  CMP #$00
+  BEQ WeaponCold
+    RTS
+  WeaponCold:
+
+  LDX #$00
+  LDA #IDX_CREATURE_BULLET_A
+  STA game_a
+
+  LoopXLabel:
+    SpriteGetYPosition game_a
+    CMP #$F0
+    BCC PositionCheck
+      SpriteFollow game_a, #IDX_CREATURE_PLAYER
+      SpriteTile game_a, #$20
+      LDA game_weapon_cooldown
+      STA game_weapon_heat
+      RTS
+    PositionCheck:
+
+    INC game_a
+    LoopX #$06, LoopXLabel
+
+  RTS
+.endproc
+
 ENGINE_STATE_ACTIVE_PREP_P0:
   PPUClear
 
@@ -76,6 +192,19 @@ ENGINE_STATE_ACTIVE_PREP_P2:
   SpriteTile #IDX_CREATURE_PLAYER_FIRE, #$20
   SpritePalette #IDX_CREATURE_PLAYER_FIRE, #$00
   SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0F
+
+  EntitySetFront #IDX_CREATURE_ENEMY_A
+  EntityTile #IDX_CREATURE_ENEMY_A, #$30
+  EntityPalette #IDX_CREATURE_ENEMY_A, #$00
+  EntityDoNotFlipX #IDX_CREATURE_ENEMY_A
+  EntityDoNotFlipY #IDX_CREATURE_ENEMY_A
+  EntitySetYPosition #IDX_CREATURE_ENEMY_A, #$20
+  EntitySetXPosition #IDX_CREATURE_ENEMY_A, #$78
+
+  LDA player_score_status
+  ORA #PLAYER_SCORE_UPDATE
+  STA player_score_status
+
   RTI
 
 ENGINE_STATE_ACTIVE:
@@ -86,12 +215,14 @@ ENGINE_STATE_ACTIVE:
   EntityTile #IDX_CREATURE_PLAYER, #$00
 
   .scope
-  LDA game_weapon_heat
-  CMP #$00
-  BEQ :+
-    DEC game_weapon_heat
-  :
+    LDA game_weapon_heat
+    CMP #$00
+    BEQ :+
+      DEC game_weapon_heat
+    :
   .endscope
+
+  JSR EngineStateActive_UpdateBullets
 
   .scope
     ControllerAGateDirectionUp DirectionUpEnd
@@ -122,78 +253,88 @@ ENGINE_STATE_ACTIVE:
 
   SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0A
 
-  .scope
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_A
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_B
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_C
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_D
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_E
-    EngineStateActive_MoveBullet #IDX_CREATURE_BULLET_F
-  .endscope
+  JSR EngineStateActive_ScoreUpdate
 
   EngineStateActive_Scroll
 
-  ; LDX tick
-  ; CPX #$00
-  ; BEQ :+
-  ;   DEX
-  ;   STX tick
-
-  ;   RTI
-  ; :
-
-  ; LDA #GAME_DEATH
-  ; STA game
-
   RTI
 
-  .proc EngineStateActive_PressUp
-    EntityDecrementYPosition #IDX_CREATURE_PLAYER, #$02, #$20
+.macro StoreByteLeftAs Variable, Target
+  LDA Variable
+  AND #%11110000
+
+  CLC
+  LSR A
+  LSR A
+  LSR A
+  LSR A
+
+  STA Target
+.endmacro
+
+.macro StoreByteRightAs Variable, Target
+  LDA Variable
+  AND #%00001111
+
+  STA Target
+.endmacro
+
+.macro ExpressSplitByte ValueLeft, ValueRight
+  LDA ValueLeft
+  ASL A
+  ASL A
+  ASL A
+  ASL A
+
+; .ifnblank
+  CLC
+  ADC ValueRight
+; .endif
+.endmacro
+
+.macro EngineStateActive_IncrementScore Variable, LeftStorage, RightStorage, ExitBranch
+.local ExitRight, ExitLeft
+  StoreByteLeftAs Variable, LeftStorage
+  StoreByteRightAs Variable, RightStorage
+
+  INC RightStorage
+
+  GateValueNotEqual RightStorage, #$0A, ExitRight
+    ExpressSplitByte LeftStorage, RightStorage
+    STA Variable
+
+    JMP ExitBranch
+  ExitRight:
+
+  INC LeftStorage
+
+  GateValueNotEqual LeftStorage, #$0A, ExitLeft
+    ExpressSplitByte LeftStorage, #$00
+    STA Variable
+
+    JMP ExitBranch
+  ExitLeft:
+
+  LDA #$00
+  STA Variable
+.endmacro
+
+.proc EngineStateActive_ScoreUpdate
+  GateValueEqual player_score_credit, #$00, ExitNoCredit
     RTS
-  .endproc
+ExitNoCredit:
 
-  .proc EngineStateActive_PressDown
-    EntityIncrementYPosition #IDX_CREATURE_PLAYER, #$02, #$E0
-    RTS
-  .endproc
+  DEC player_score_credit
 
-  .proc EngineStateActive_PressLeft
-    EntityDecrementXPosition #IDX_CREATURE_PLAYER, #$02, #$00
-    EntityTile #IDX_CREATURE_PLAYER, #$02
-    RTS
-  .endproc
+  LDA player_score_status
+  ORA #PLAYER_SCORE_UPDATE
+  STA player_score_status
 
-  .proc EngineStateActive_PressRight
-    EntityIncrementXPosition #IDX_CREATURE_PLAYER, #$02, #$EF
-    EntityTile #IDX_CREATURE_PLAYER, #$04
-    RTS
-  .endproc
+  EngineStateActive_IncrementScore player_score_a, store_a, store_b, ExitCreditComplete
+  EngineStateActive_IncrementScore player_score_b, store_a, store_b, ExitCreditComplete
+  EngineStateActive_IncrementScore player_score_c, store_a, store_b, ExitCreditComplete
+  EngineStateActive_IncrementScore player_score_d, store_a, store_b, ExitCreditComplete
 
-  .proc EngineStateActive_PressFire
-    LDA game_weapon_heat
-    CMP #$00
-    BEQ WeaponCold
-      RTS
-    WeaponCold:
-
-    LDX #$00
-
-    LDA #IDX_CREATURE_BULLET_A
-    STA game_a
-
-    LoopXLabel:
-      SpriteGetYPosition game_a
-      CMP #$F0
-      BCC PositionCheck
-        SpriteFollow game_a, #IDX_CREATURE_PLAYER
-        SpriteTile game_a, #$20
-        LDA game_weapon_cooldown
-        STA game_weapon_heat
-        RTS
-      PositionCheck:
-
-      INC game_a
-      LoopX #$06, LoopXLabel
-
-    RTS
-  .endproc
+ExitCreditComplete:
+  RTS
+.endproc

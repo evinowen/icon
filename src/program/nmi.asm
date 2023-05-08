@@ -1,5 +1,10 @@
 PPUSpriteDMA
 
+GateOnBitThenClear player_score_status, #PLAYER_SCORE_UPDATE, ScoreEnd
+;   VBlankWait
+  PrintScore
+ScoreEnd:
+
 .proc ExecuteSplitscreen
   PPUScroll #$00, #$00
   LDA scroll
@@ -12,9 +17,10 @@ PPUSpriteDMA
 
 ;; Load Color Updates
 ; JSR PPUColor
-
 ;; Load Background Updates
 PPUBackground
+
+
 
 ;; Update $2000 and $2001
 PPUSet

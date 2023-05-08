@@ -4,7 +4,7 @@
   LDA Variable     ;; LOAD Variable into ACCUMULATOR
   AND BitSignature ;; AND BitSignature to compare only bits in signature
   CMP BitSignature ;; COMPARE BitSignature to ensure all signature bits are set
-  BCS EndMacro     ;; BRANCH on CARRY SET because not all bits are set
+  BEQ EndMacro     ;; BRANCH on CARRY SET because not all bits are set
     JMP BranchExit
 EndMacro:
 .endmacro

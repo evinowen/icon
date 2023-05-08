@@ -76,7 +76,7 @@ game_weapon_cooldown: .res 1
 game_a:        .res 1
 game_b:        .res 1
 game_c:        .res 1
-
+game_d:        .res 1
 
 ;;
 ;; Scroll
@@ -118,6 +118,8 @@ player_score_b: .res 1
 player_score_c: .res 1
 player_score_d: .res 1
 
+player_score_status: .res 1
+PLAYER_SCORE_UPDATE = %00000001
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;

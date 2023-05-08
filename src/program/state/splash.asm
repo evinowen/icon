@@ -31,7 +31,7 @@ ENGINE_STATE_SPLASH_PREP_P1:
 
   JSR PPUNMIEnable
 
-  LDA #$A0
+  LDA #$80
   STA tick
 
   RTI
