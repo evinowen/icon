@@ -18,7 +18,7 @@
 
 ```
 
-Icon is an arcade-style Fixed Shooter action game developed for the original Ninteno Entertainment System (NES).
+Icon is an arcade-style Fixed Shooter action game developed for the original Nintendo Entertainment System (NES).
 
 ## Build
 To build leverage the Makefile, running `make` in the root directory.
