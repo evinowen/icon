@@ -82,6 +82,12 @@ game_d:        .res 1
 ;; Scroll
 ;; Number of pixels to scroll the view down vertically
 scroll:     .res 1
+scanline:   .res 1
+
+;;
+;; Palette
+palette:      .res 1
+palette_last: .res 1
 
 ;;
 ;; Controller A and B

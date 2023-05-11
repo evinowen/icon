@@ -1,6 +1,9 @@
 ENGINE_STATE_SPLASH_PREP_P0:
   PPUClear
 
+  LDA #$00
+  STA scanline
+
   LDX #$02
   JSR MAPSetCHRBankActive
   JSR ScreenLoader

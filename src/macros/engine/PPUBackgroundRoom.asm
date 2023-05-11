@@ -5,8 +5,7 @@
 PPUBACKGROUNDROOM_TITLE   = $F0
 PPUBACKGROUNDROOM_SPLASH  = $F1
 PPUBACKGROUNDROOM_ACTIVE  = $F2
-PPUBACKGROUNDROOM_PASSIVE = $F3
-PPUBACKGROUNDROOM_DEATH   = $F4
+PPUBACKGROUNDROOM_DEATH   = $F3
 
 .macro PPUBackgroundRoom RoomIndex
 .local LoadBackground, EndMacro
@@ -38,16 +37,6 @@ PPUBACKGROUNDROOM_DEATH   = $F4
   BNE End
     LoadPointer bg_tile_active, address_a
     LoadPointer bg_attr_active, address_b
-
-    JMP LoadBackground
-  End:
-  .endscope
-
-  .scope
-  CMP #PPUBACKGROUNDROOM_PASSIVE
-  BNE End
-    LoadPointer bg_tile_passive, address_a
-    LoadPointer bg_attr_passive, address_b
 
     JMP LoadBackground
   End:

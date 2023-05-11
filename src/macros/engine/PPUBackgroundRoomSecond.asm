@@ -9,7 +9,10 @@
   .scope
   CMP #PPUBACKGROUNDROOM_TITLE
   BNE End
-    JMP EndMacro
+    LoadPointer bg_tile_title_second, address_a
+    LoadPointer bg_attr_title_second, address_b
+
+    JMP LoadBackground
   End:
   .endscope
 
@@ -23,8 +26,8 @@
   .scope
   CMP #PPUBACKGROUNDROOM_ACTIVE
   BNE End
-    LoadPointer bg_tile_passive, address_a
-    LoadPointer bg_attr_passive, address_b
+    LoadPointer bg_tile_active_second, address_a
+    LoadPointer bg_attr_active_second, address_b
 
     JMP LoadBackground
   End:

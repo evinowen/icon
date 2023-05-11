@@ -7,9 +7,6 @@
   LDA PositionX
   STA $2005
 
-  BIT $2002
-
   LDA PositionY
-  STA $2006
-  STA $2006
+  STA $2005
 .endmacro

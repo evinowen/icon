@@ -12,6 +12,10 @@ LDX #$00
 JSR MAPSetCHRBankTitle
 JSR ScreenLoader
 
+LDA #$00
+STA palette
+STA palette_last
+
 LoadPointer palette_title, address_a
 
 JSR LoadPalette

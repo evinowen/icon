@@ -137,6 +137,9 @@ NoHit:
 ENGINE_STATE_ACTIVE_PREP_P0:
   PPUClear
 
+  LDA #$01
+  STA scanline
+
   LDX #$02
   JSR MAPSetCHRBankActive
   JSR ScreenLoader
@@ -286,10 +289,10 @@ ENGINE_STATE_ACTIVE:
   ASL A
   ASL A
 
-; .ifnblank
+.ifnblank ValueRight
   CLC
   ADC ValueRight
-; .endif
+.endif
 .endmacro
 
 .macro EngineStateActive_IncrementScore Variable, LeftStorage, RightStorage, ExitBranch

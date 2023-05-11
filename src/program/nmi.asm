@@ -1,22 +1,35 @@
 PPUSpriteDMA
 
+;; Load Color Updates
+.proc ExecutePaletteUpdates
+  LDY palette
+  CPY palette_last
+  BEQ End
+    STY palette_last
+    LoadAddressOffsetY PALETTES, address_a
+    JSR LoadPalette
+  End:
+.endproc
+
 GateOnBitThenClear player_score_status, #PLAYER_SCORE_UPDATE, ScoreEnd
 ;   VBlankWait
   PrintScore
 ScoreEnd:
 
 .proc ExecuteSplitscreen
-  PPUScroll #$00, #$00
-  LDA scroll
+  LDA scanline
   CMP #$00
-  BEQ End
+  BEQ NoSplit
+    PPUScroll #$00, #$00
     LDA #$1F
     JSR MAPScanlineTrigger
+    JMP End
+  NoSplit:
+    PPUScroll #$00, scroll
+
   End:
 .endproc
 
-;; Load Color Updates
-; JSR PPUColor
 ;; Load Background Updates
 PPUBackground
 
