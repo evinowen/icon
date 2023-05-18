@@ -85,6 +85,10 @@ scroll:     .res 1
 scanline:   .res 1
 
 ;;
+;; Animated
+animated:   .res 1
+
+;;
 ;; Palette
 palette:      .res 1
 palette_last: .res 1

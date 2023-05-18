@@ -11,3 +11,5 @@
 .segment "GRAPHICS"
 .incbin "gfx/title.frame.chr"
 .incbin "gfx/game.frame.chr"
+.incbin "gfx/animated.chr"
+

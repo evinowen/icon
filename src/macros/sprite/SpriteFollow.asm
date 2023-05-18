@@ -9,7 +9,7 @@
   SpriteSetXPosition Index, zero_a
 
   SpriteGetYPosition Target
-  .ifnblank OffsetX
+  .ifnblank OffsetY
     CLC
     ADC OffsetY
   .endif

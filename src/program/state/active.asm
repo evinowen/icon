@@ -14,7 +14,7 @@
   SpriteGetYPosition Index
   CMP #$F0
   BCS EndMacro
-    SpriteDecrementYPosition Index, #$02
+    SpriteDecrementYPosition Index, #$03
 EndMacro:
 .endmacro
 
@@ -122,7 +122,10 @@ NoHit:
     CMP #$F0
     BCC PositionCheck
       SpriteFollow game_a, #IDX_CREATURE_PLAYER
-      SpriteTile game_a, #$20
+      SpriteTile game_a, #$81
+      SpritePalette game_a, #$01
+      SpriteDoNotFlipY game_a
+      SpriteDoNotFlipX game_a
       LDA game_weapon_cooldown
       STA game_weapon_heat
       RTS
@@ -151,6 +154,9 @@ ENGINE_STATE_ACTIVE_PREP_P0:
   STA color_index
   LDA #%10000000
   STA color_status
+
+  LDA #PALETTE_ACTIVE
+  STA palette
 
   JSR PPUNMIEnable
 
@@ -192,9 +198,11 @@ ENGINE_STATE_ACTIVE_PREP_P2:
   EntitySetXPosition #IDX_CREATURE_PLAYER, #$78
 
   SpriteSetFront #IDX_CREATURE_PLAYER_FIRE
-  SpriteTile #IDX_CREATURE_PLAYER_FIRE, #$20
-  SpritePalette #IDX_CREATURE_PLAYER_FIRE, #$00
-  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0F
+  SpriteTile #IDX_CREATURE_PLAYER_FIRE, #$80
+  SpritePalette #IDX_CREATURE_PLAYER_FIRE, #$01
+  SpriteDoNotFlipX #IDX_CREATURE_PLAYER_FIRE
+  SpriteDoNotFlipY #IDX_CREATURE_PLAYER_FIRE
+  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$20
 
   EntitySetFront #IDX_CREATURE_ENEMY_A
   EntityTile #IDX_CREATURE_ENEMY_A, #$30
@@ -214,6 +222,41 @@ ENGINE_STATE_ACTIVE:
   PrepareEngineState #$00, ENGINE_STATE_ACTIVE_PREP_P0
   PrepareEngineState #$01, ENGINE_STATE_ACTIVE_PREP_P1
   PrepareEngineState #$02, ENGINE_STATE_ACTIVE_PREP_P2
+
+  .scope
+  INC animated
+  LDA animated
+
+  CMP #$10
+  BEQ animate_frame_reset
+  CMP #$00
+  BNE animate_frame_a
+  animate_frame_reset:
+    LDA #$00
+    STA animated
+
+    MMC3SetCHRBank #MMC3_CHR_SPRITE_B, #MMC3_STORE_C1
+  animate_frame_a:
+
+  CMP #$04
+  BNE animate_frame_b
+
+    MMC3SetCHRBank #MMC3_CHR_SPRITE_B, #MMC3_STORE_C3
+  animate_frame_b:
+
+  CMP #$08
+  BNE animate_frame_c
+
+    MMC3SetCHRBank #MMC3_CHR_SPRITE_B, #MMC3_STORE_C5
+  animate_frame_c:
+
+  CMP #$0C
+  BNE animate_frame_d
+
+    MMC3SetCHRBank #MMC3_CHR_SPRITE_B, #MMC3_STORE_C7
+  animate_frame_d:
+
+  .endscope
 
   EntityTile #IDX_CREATURE_PLAYER, #$00
 
@@ -254,7 +297,7 @@ ENGINE_STATE_ACTIVE:
     ButtonBEnd:
   .endscope
 
-  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0A
+  SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$0F
 
   JSR EngineStateActive_ScoreUpdate
 

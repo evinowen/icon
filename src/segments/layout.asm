@@ -38,9 +38,13 @@ palette_title_fade_c:
   .byte $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F
   .byte $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F
 
+palette_active:
+  .byte $0F,$20,$00,$10,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F
+  .byte $0F,$20,$00,$10,  $0F,$27,$15,$10,  $0F,$0F,$0F,$0F,  $0F,$0F,$0F,$0F
+
 
 PALETTES:
-  .word palette_title, palette_title_fade_a, palette_title_fade_b, palette_title_fade_c
+  .word palette_title, palette_title_fade_a, palette_title_fade_b, palette_title_fade_c, palette_active
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Title Screen
