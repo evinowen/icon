@@ -1,30 +1,17 @@
 .macro EntityIncrementYPosition Index, Value, Max
 .local EndMacro
-.ifnblank Max
   SpriteGetYPosition Index
   CLC
   ADC Value
+.ifnblank Max
   BCS EndMacro
   CMP Max
   BCS EndMacro
 .endif
 
-  LDA Index
-  STA zero_a
+  STA zero_c
 
-  SpriteIncrementYPosition zero_a, Value
-
-  INC zero_a
-
-  SpriteIncrementYPosition zero_a, Value
-
-  INC zero_a
-
-  SpriteIncrementYPosition zero_a, Value
-
-  INC zero_a
-
-  SpriteIncrementYPosition zero_a, Value
+  EntitySetYPosition Index, zero_c
 
 EndMacro:
 .endmacro

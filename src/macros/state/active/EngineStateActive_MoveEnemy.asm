@@ -1,8 +1,12 @@
-.macro EngineStateActive_MoveEnemy Index
-.local EndMacro
-  SpriteGetYPosition Index
-  CMP #$F0
-  BCS EndMacro
-    SpriteIncrementYPosition Index, #$01
+.macro EngineStateActive_MoveEnemy
+.local EnemyHasSpawned, EndMacro
+  EnemyGetStatus
+  CMP #ENEMY_STATUS_SPAWNED
+  BEQ EnemyHasSpawned
+    JMP EndMacro
+
+EnemyHasSpawned:
+  EntityIncrementYPosition enemy_entity_index, #$01
+
 EndMacro:
 .endmacro

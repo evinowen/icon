@@ -31,9 +31,6 @@ store_e:       .res 1
 address_a:     .res 2
 address_b:     .res 2
 address_c:     .res 2
-address_d:     .res 2
-address_e:     .res 2
-address_t:     .res 2
 address_jmp:   .res 2
 
 tick:          .res 1
@@ -70,13 +67,17 @@ game_prep:     .res 1
 game_pause:    .res 1
 game_state:    .res 1
 
-game_weapon_heat: .res 1
+game_weapon_heat:     .res 1
 game_weapon_cooldown: .res 1
+
+game_enemy_status:    .res IDX_CREATURE_ENEMY_TOTAL
+game_enemy_cooldown:  .res 1
 
 game_a:        .res 1
 game_b:        .res 1
 game_c:        .res 1
 game_d:        .res 1
+
 
 ;;
 ;; Scroll
@@ -130,6 +131,27 @@ player_score_d: .res 1
 
 player_score_status: .res 1
 PLAYER_SCORE_UPDATE = %00000001
+
+;;
+;; Enemy Management
+enemy_object_index: .res 1
+enemy_entity_index: .res 1
+
+ENEMY_SIZE = $02
+ENEMY_HEALTH = $00
+ENEMY_STATUS = $01
+ENEMY_STATUS_OPEN    = $00
+ENEMY_STATUS_SPAWNED = $01
+ENEMY_STATUS_DESTROY = $02
+enemy_objects:
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
+  .res ENEMY_SIZE
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;
@@ -225,41 +247,41 @@ bg_current:    .res 1
 ;; +-------- Update
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-creatures:
-  player: .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
-  .res OBJ_CREATURE
+; creatures:
+;   player: .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
+;   .res OBJ_CREATURE
 
-player_bullets:
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
+; player_bullets:
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
 
-enemy_bullets:
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
-  .res OBJ_BULLET
+; enemy_bullets:
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
+;   .res OBJ_BULLET
