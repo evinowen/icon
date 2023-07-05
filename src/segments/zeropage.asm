@@ -132,6 +132,11 @@ player_score_d: .res 1
 player_score_status: .res 1
 PLAYER_SCORE_UPDATE = %00000001
 
+player_health: .res 1
+player_status: .res 1
+PLAYER_STATUS_SPAWNED = $01
+PLAYER_STATUS_DESTROY = $02
+
 ;;
 ;; Enemy Management
 enemy_object_index: .res 1
@@ -225,63 +230,6 @@ bg_status:     .res 1
 BG_STATUS_UPDATE = %10000000
 BG_STATUS_SPLIT  = %01000000
 BG_STATUS_MIRROR = %00100000
-; BG_STATUS_       = %00010000
 BG_STATUS_INDEX  = %00001111
 
 bg_current:    .res 1
-
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;;
-;; Sprite Status Byte
-;;
-;; 76543210
-;; ||||||||
-;; ||||||||
-;; ||||||++- Facing (00: Up, 01: Down, 10: Left, 11: Right )
-;; |||||+---
-;; ||||+---- Value
-;; |||+----- Toggle
-;; ||+------ Rendered
-;; |+------- Display
-;; +-------- Update
-;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-; creatures:
-;   player: .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-;   .res OBJ_CREATURE
-
-; player_bullets:
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-
-; enemy_bullets:
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET
-;   .res OBJ_BULLET

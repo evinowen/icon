@@ -11,9 +11,5 @@ EndMacro:
 
 .macro GateOnBitThenClear Variable, BitSignature, BranchExit
   GateOnBit Variable, BitSignature, BranchExit
-
-  LDA Variable
-  SEC
-  SBC BitSignature
-  STA Variable
+  ByteClearBit Variable, BitSignature
 .endmacro

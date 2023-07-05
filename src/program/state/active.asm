@@ -23,6 +23,7 @@
 
 .include "program/support/active/EngineStateActive_Animate.asm"
 .include "program/support/active/EngineStateActive_CollideEnemyPlayerBullets.asm"
+.include "program/support/active/EngineStateActive_DestroyPlayer.asm"
 .include "program/support/active/EngineStateActive_PressDown.asm"
 .include "program/support/active/EngineStateActive_PressFire.asm"
 .include "program/support/active/EngineStateActive_PressLeft.asm"
@@ -58,6 +59,7 @@ ENGINE_STATE_ACTIVE:
   ;; Loop Entity Updates
   JSR EngineStateActive_UpdateBullets
   EnemyLoop EngineStateActive_UpdateEnemies
+  JSR EngineStateActive_DestroyPlayer
 
   ;; Process Player controller input
   EngineStateActive_ProcessController

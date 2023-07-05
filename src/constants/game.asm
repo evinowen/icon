@@ -4,3 +4,5 @@ GAME_ACTIVE        =   $04
 GAME_DEATH         =   $06
 
 GAME_ENEMY_SPAWN_COOL = $40
+
+GAME_ENEMY_COLLIDE = $0C

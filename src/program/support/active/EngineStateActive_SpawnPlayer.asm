@@ -14,5 +14,8 @@
   SpriteDoNotFlipY #IDX_CREATURE_PLAYER_FIRE
   SpriteFollow #IDX_CREATURE_PLAYER_FIRE, #IDX_CREATURE_PLAYER, #$04, #$20
 
+  PlayerSetHealth #$01
+  PlayerSetStatus #PLAYER_STATUS_SPAWNED
+
   RTS
 .endproc

@@ -1,5 +1,9 @@
 .macro EngineStateActive_ProcessController
-.local DirectionUp, DirectionDown, DirectionLeft, DirectionRight, ButtonA, ButtonB
+.local DirectionUp, DirectionDown, DirectionLeft, DirectionRight, ButtonA, ButtonB, EndMacro
+  PlayerGetStatus
+  CMP #PLAYER_STATUS_SPAWNED
+  BNE EndMacro
+
   ControllerAGateDirectionUp DirectionUp
     JSR EngineStateActive_PressUp
   DirectionUp:
@@ -24,4 +28,6 @@
   ControllerAGateButtonB ButtonB
     JSR EngineStateActive_PressFire
   ButtonB:
+
+EndMacro:
 .endmacro
